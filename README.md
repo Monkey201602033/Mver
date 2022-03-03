@@ -1,2 +1,6 @@
 # Mver
-机器视觉软件
+Machine Vision Software
+
+Language：C#
+
+Env：VS2017
