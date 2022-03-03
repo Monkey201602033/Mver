@@ -26,6 +26,7 @@ namespace WindowsFormsApp1
         //DHCameraCtrl m_objDHCamera;   // 相机初始化
         DHCameraCtrls m_objDHCameras;
         ImageProcessing m_objImageProcessing;
+     
         bool m_bHeartBeat = true;                          // 心跳
         int m_nNumCamera;
         string[] m_sDeviceName = new string[10];
@@ -46,7 +47,7 @@ namespace WindowsFormsApp1
             //m_objImageProcessing.SendImageEventCameraTwo += ShowImageEvent2;
             InitCameras();                                                    // 初始化所有相机，将事件图像处理事件加入委托
             InitCameraStatue(m_nNumCamera);
-            InitPLCStatue(1);
+            InitPLCStatue(0);
             ChangeStateBarColor(false, toolStripStatusLabel8);
         }
 
@@ -233,6 +234,7 @@ namespace WindowsFormsApp1
         private void pLCToolStripMenuItem_Click(object sender, EventArgs e)
         {
             CommunicationPLCWindow objCommunicationPLC = new CommunicationPLCWindow(m_objCommPLC);
+            objCommunicationPLC.SendPLCStateEvent += InitPLCStatue;
             objCommunicationPLC.Show();
         }
 

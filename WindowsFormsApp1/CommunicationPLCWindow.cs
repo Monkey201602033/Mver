@@ -14,8 +14,10 @@ namespace WindowsFormsApp1
     public delegate void ConnectionPLCDelegate(string _sNameIP); 
     public delegate void WriteDataPLCDelegate(string _address, string _data);
     public delegate string ReadDataPLCDelegate(string _address);
+    public delegate void SendPLCState(int _num);
     public partial class CommunicationPLCWindow : Form
     {
+        public event SendPLCState SendPLCStateEvent;
         CommunicationPLC m_objCommPLC;
         string m_sNamePLC;
         string m_sNameIP;
@@ -104,9 +106,11 @@ namespace WindowsFormsApp1
             if(!m_objCommPLC.GetConnectionStatue())
             {
                 MessageBox.Show("PLC连接失败！");
+                SendPLCStateEvent(0);
             }
             else
             {
+                SendPLCStateEvent(1);
                 MessageBox.Show("PLC连接成功！");
             }
         }
