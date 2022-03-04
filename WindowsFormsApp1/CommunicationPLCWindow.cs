@@ -105,8 +105,9 @@ namespace WindowsFormsApp1
             }
             if(!m_objCommPLC.GetConnectionStatue())
             {
-                MessageBox.Show("PLC连接失败！");
                 SendPLCStateEvent(0);
+                MessageBox.Show("PLC连接失败！");
+                
             }
             else
             {
