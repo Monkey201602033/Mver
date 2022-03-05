@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using GxIAPINET;
 using OpenCvSharp;
+using System.Drawing;
+using System.Drawing.Imaging;
 namespace WindowsFormsApp1
 {
     public delegate void SendImageDelegate(Mat _image, int _idPictureBox);
-    public delegate void SendCaptureStatueDelegate(bool _bCaptureImage);
+    public delegate void SendCaptureStatueDelegate(bool _bCaptureImage, string _typeCamera);
     class ImageProcessing
     {
         CommunicationPLC m_objCommPLC;
@@ -23,7 +25,7 @@ namespace WindowsFormsApp1
         }
         public event SendImageDelegate CameraSendImageEvent;    // 定义事件
         public event SendCaptureStatueDelegate CaptureStatueEvent;
-        public void CameraProcessOne(object objUserParam, IFrameData objIFrameData)
+        public void CameraProcessDH(object objUserParam, IFrameData objIFrameData)
         {
             m_objCommPLC.WriteByteSiemensS7("DB100.11", 11);
             m_objCommPLC.WriteByteSiemensS7("DB100.10", 10);
@@ -37,7 +39,19 @@ namespace WindowsFormsApp1
             CameraSendImageEvent(dst, 2);
             m_objCommPLC.WriteByteSiemensS7("DB100.12", 11);
             
-            CaptureStatueEvent(true);
+            CaptureStatueEvent(true, "DH");
+        }
+        public void CameraProcessBasler(Bitmap bmp)
+        {
+            m_objCommPLC.WriteByteSiemensS7("DB10.11", 11);
+            m_objCommPLC.WriteByteSiemensS7("DB10.10", 10);
+            // 图像处理
+            OpenCvSharp.Mat mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(bmp);
+            CameraSendImageEvent(mat, 3);          // 给主程序发送图片
+            CameraSendImageEvent(mat, 4);
+            m_objCommPLC.WriteByteSiemensS7("DB10.12", 11);
+
+            CaptureStatueEvent(true, "Basler");
         }
         public void CameraProcessTwo(object objUserParam, IFrameData objIFrameData)
         {

@@ -56,6 +56,10 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Basler.Pylon, Version=1.2.0.0, Culture=neutral, PublicKeyToken=e389355f398382ab, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Basler.Pylon.dll</HintPath>
+    </Reference>
     <Reference Include="GxIAPINET">
       <HintPath>.\GxIAPINET.dll</HintPath>
     </Reference>
@@ -111,6 +115,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaslerCameraCtrl.cs" />
     <Compile Include="CameraSetting.cs">
       <SubType>Form</SubType>
     </Compile>

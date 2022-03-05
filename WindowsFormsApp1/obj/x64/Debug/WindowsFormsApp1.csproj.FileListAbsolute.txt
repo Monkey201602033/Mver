@@ -151,3 +151,4 @@ D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\x64\pcl_visualiza
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\PclSharp.dll
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\PclSharp.pdb
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\PclSharp.xml
+D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\Basler.Pylon.dll

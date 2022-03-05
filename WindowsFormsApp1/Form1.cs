@@ -14,7 +14,6 @@ using HslCommunication.Profinet.Siemens;
 using WindowsFormsApp1;
 using OpenCvSharp;
 using GxIAPINET;
-
 using System.Threading;
 namespace WindowsFormsApp1
 {
@@ -23,29 +22,38 @@ namespace WindowsFormsApp1
     {
         SiemensS7Net plc;                                  // PLC通信
         CommunicationPLC m_objCommPLC;
-        //DHCameraCtrl m_objDHCamera;   // 相机初始化
         DHCameraCtrls m_objDHCameras;
+        BaslerCameraCtrl m_objBaslerCamera;
         ImageProcessing m_objImageProcessing;
      
         bool m_bHeartBeat = true;                          // 心跳
         int m_nNumCamera;
         string[] m_sDeviceName = new string[10];
-        bool m_bCaptureImage = true;
+        bool m_bCaptureImageDH = true;
+        bool m_bCaptureImageBasler = true;
         string m_appPath = System.Windows.Forms.Application.StartupPath;
         public Form1()
         {
             InitializeComponent();
-            // plc = new SiemensS7Net(SiemensPLCS.S1200, "127.0.0.1");
-            m_objCommPLC = CommunicationPLC.CreateInstance();
+
+            m_objCommPLC = CommunicationPLC.CreateInstance();                                    // 通信初始化
+
+            // 图像处理初始化
+            m_objImageProcessing = new ImageProcessing();                                
+            m_objImageProcessing.CameraSendImageEvent += PictureBoxShowEvent;                   // 注册显示图像事件
+            m_objImageProcessing.CaptureStatueEvent += GetCaptureStatueEvent;                   // 图像采集完成事件 
+
+            // basler相机初始化
+            m_objBaslerCamera = new BaslerCameraCtrl();
+            m_nNumCamera = m_objBaslerCamera.CameraInit();                                    
+            m_objBaslerCamera.CameraImageEvent += m_objImageProcessing.CameraProcessBasler;     // basler相机响应事件，所有相机事件触发同一事件函数
+
+            // 大恒相机初始化
             m_objDHCameras = new DHCameraCtrls();
             m_objDHCameras.opencamera();
-            //m_objDHCamera = new DHCameraCtrl();
-            //m_nNumCamera = m_objDHCamera.EnumDevices(ref m_sDeviceName);      // 枚举所有相机
-            m_objImageProcessing = new ImageProcessing();
-            m_objImageProcessing.CameraSendImageEvent += PictureBoxShowEvent;            // 注册显示图像事件
-            m_objImageProcessing.CaptureStatueEvent += GetCaptureStatueEvent;
-            //m_objImageProcessing.SendImageEventCameraTwo += ShowImageEvent2;
-            InitCameras();                                                    // 初始化所有相机，将事件图像处理事件加入委托
+            InitCameras();                                                                      // 初始化所有相机，将事件图像处理事件加入委托
+
+            // 状态栏初始化
             InitCameraStatue(m_nNumCamera);
             InitPLCStatue(0);
             ChangeStateBarColor(false, toolStripStatusLabel8);
@@ -62,28 +70,9 @@ namespace WindowsFormsApp1
         }
         public void InitCameras()
         {
-            m_objDHCameras.RegisterCallBackCaptureImage(m_objImageProcessing.CameraProcessOne);  // 注册相机回调
-            //m_objDHCameras.CaptureImage();
-            //m_objDHCameras.RegisterCallBackCaptureImage(CameraProcessOne);
-
+            m_objDHCameras.RegisterCallBackCaptureImage(m_objImageProcessing.CameraProcessDH);  // 注册相机回调
         }
-        /*
-        public void CallBackCaptureImage(object objUserParam, IFrameData objIFrameData)
-        {
-            // plc.Write("DB100.11", 11);     // 发送采图完成信号
-            m_objCommPLC.WriteByte("DB100.11", 11);
-            // 图像处理
-            int width = (int)objIFrameData.GetWidth();
-            int height = (int)objIFrameData.GetHeight();
-            Mat image = m_objDHCameras.IFrameData2Mat(objIFrameData, width, height);
-            PictureBoxShow(image, this.pictureBox1);
-            Cv2.Threshold(image, image, 150, 255, ThresholdTypes.Binary);
-            PictureBoxShow(image, this.pictureBox2);
-            // plc.Write("DB100.12", 11);     // 发送图像处理完成信号
-            m_objCommPLC.WriteByte("DB100.12", 11);
-            // m_bCaptureImage = true;
-        }
-        */
+      
         void AutoRun()
         {
             int i = 0;
@@ -95,12 +84,23 @@ namespace WindowsFormsApp1
                 ));
                 i++;
                 Thread.Sleep(50); // 每秒读取一次
-                byte byteCaptureImage = m_objCommPLC.ReadByteSiemensS7("DB100.10");
-                if (11 == byteCaptureImage && m_bCaptureImage)
+                
+                byte byteCaptureImageBasler = m_objCommPLC.ReadByteSiemensS7("DB10.22");
+                /*
+                byte byteCaptureImageDH = m_objCommPLC.ReadByteSiemensS7("DB100.10");
+                if (11 == byteCaptureImageDH && m_bCaptureImageDH)
                 {
                     // 触发相机拍照
-                    m_objDHCameras.CaptureImage();
-                    m_bCaptureImage = false;
+                     m_objDHCameras.CaptureImage();
+                    //m_objBaslerCamera.OneShot("21163847");
+                    m_bCaptureImageDH = false;
+                }
+                */
+                if (11 == byteCaptureImageBasler && m_bCaptureImageBasler)
+                {
+                    // 触发相机拍照
+                    m_objBaslerCamera.OneShot("21163847");
+                    m_bCaptureImageBasler = false;
                 }
             }
         }
@@ -117,15 +117,33 @@ namespace WindowsFormsApp1
                 MessageBox.Show("PLC未连接！");
             }
         }
+
+        private void BaslerEventInit(int _numCamera)
+        {
+            for(int i = 0; i < _numCamera; i++)
+            {
+
+            }
+        }
+
         private void PictureBoxShow(Mat _image, PictureBox objPictureBox)
         {
             Bitmap bitMap = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(_image);
             objPictureBox.SizeMode = PictureBoxSizeMode.StretchImage;
             objPictureBox.Image = bitMap;
         }
-        private void GetCaptureStatueEvent(bool bCaptureImage)
+        private void GetCaptureStatueEvent(bool _bCaptureImage, string _typeCamera)
         {
-            m_bCaptureImage = bCaptureImage;
+            switch(_typeCamera)
+            {
+                case "DH":
+                    m_bCaptureImageDH = _bCaptureImage;
+                    break;
+                case "Basler":
+                    m_bCaptureImageBasler = _bCaptureImage;
+                    break;
+            }
+           
         }
         // 事件响应函数
         public void PictureBoxShowEvent(Mat _image, int _idPictureBox)
