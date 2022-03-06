@@ -31,31 +31,38 @@ namespace WindowsFormsApp1
         //相机初始化
         public int CameraInit()
         {
-            m_allCameras = CameraFinder.Enumerate();
-            for(int i = 0; i < m_allCameras.Count; i++)
+            try
             {
-                Camera camera = new Camera(m_allCameras[i]);
-                
-                //自由运行模式
-                camera.CameraOpened += Configuration.AcquireContinuous;
+                m_allCameras = CameraFinder.Enumerate();
+                for (int i = 0; i < m_allCameras.Count; i++)
+                {
+                    Camera camera = new Camera(m_allCameras[i]);
 
-                //断开连接事件
-                camera.ConnectionLost += Camera_ConnectionLost;
+                    //自由运行模式
+                    camera.CameraOpened += Configuration.AcquireContinuous;
 
-                //抓取开始事件
-                camera.StreamGrabber.GrabStarted += StreamGrabber_GrabStarted;
+                    //断开连接事件
+                    camera.ConnectionLost += Camera_ConnectionLost;
 
-                //添加抓取图片事件
-                camera.StreamGrabber.ImageGrabbed += StreamGrabber_ImageGrabbed;
+                    //抓取开始事件
+                    camera.StreamGrabber.GrabStarted += StreamGrabber_GrabStarted;
 
-                //结束抓取事件
-                camera.StreamGrabber.GrabStopped += StreamGrabber_GrabStopped;
+                    //添加抓取图片事件
+                    camera.StreamGrabber.ImageGrabbed += StreamGrabber_ImageGrabbed;
 
-                //打开相机
-                camera.Open();
-                string ss = m_allCameras[i][CameraInfoKey.SerialNumber];
-                m_mapCameras.Add(m_allCameras[i][CameraInfoKey.SerialNumber], camera);
-                
+                    //结束抓取事件
+                    camera.StreamGrabber.GrabStopped += StreamGrabber_GrabStopped;
+
+                    //打开相机
+                    camera.Open();
+                    string ss = m_allCameras[i][CameraInfoKey.SerialNumber];
+                    m_mapCameras.Add(m_allCameras[i][CameraInfoKey.SerialNumber], camera);
+
+                }
+            }
+            catch
+            {
+                return -1;
             }
             
             return m_allCameras.Count;

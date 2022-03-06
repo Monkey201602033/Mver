@@ -17,9 +17,11 @@ namespace WindowsFormsApp1
     {
         Mat m_ShowImage = new Mat();
         bool m_PressCtrl = false;
+        double m_scale = 1.2;
         public ImageAnalysis()
         {
             InitializeComponent();
+            this.pictureBox1.MouseWheel += new MouseEventHandler(pictureBox1_MouseWheel);
         }
 
         private void pictureBox1_MouseHover(object sender, EventArgs e)
@@ -28,23 +30,40 @@ namespace WindowsFormsApp1
         }
         private void pictureBox1_MouseWheel(object sender, MouseEventArgs e)
         {
-            double step = 1.2;
-            if (e.Delta > 0 && m_PressCtrl)//以鼠标为中心放大
+            double scale = 1.2;
+            if (m_scale < 6.0 && e.Delta > 0)
             {
-                OpenCvSharp.Size size = new OpenCvSharp.Size();
-                size.Height = (int)(m_ShowImage.Rows * step);
-                size.Width = (int)(m_ShowImage.Cols * step);
-                Cv2.Resize(m_ShowImage, m_ShowImage, size);
-                Cv2.ImWrite("D:\\1.png", m_ShowImage);
-                pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(m_ShowImage);
+                m_scale = m_scale * scale;
+            }
+            else if(m_scale > 0.1 && e.Delta < 0)
+            {
+                m_scale = m_scale / scale;
+            }
+
+            Mat dst = m_ShowImage.Clone();
+            if (e.Delta > 0 && m_PressCtrl)
+            {
+                //OpenCvSharp.Size size = new OpenCvSharp.Size(m_ShowImage.Rows * step, m_ShowImage.Cols * step);
+                OpenCvSharp.Size size = new OpenCvSharp.Size(0, 0);
+                double step = m_scale;
+                if (m_scale > 1.0)
+                {
+                    step = System.Math.Round(m_scale);
+                }
+                Cv2.Resize(m_ShowImage, dst, size, step, step, InterpolationFlags.Nearest);
+                Cv2.ImWrite("D:\\1.png", dst);
+                pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(dst);
             }
             else if(e.Delta < 0 && m_PressCtrl)
             {
-                OpenCvSharp.Size size = new OpenCvSharp.Size();
-                size.Height = (int)(m_ShowImage.Rows / step);
-                size.Width = (int)(m_ShowImage.Cols / step);
-                Cv2.Resize(m_ShowImage, m_ShowImage, size);
-                pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(m_ShowImage);
+                OpenCvSharp.Size size = new OpenCvSharp.Size(0, 0);
+                double step = m_scale;
+                if (m_scale > 1.0)
+                {
+                    step = System.Math.Round(m_scale);
+                }
+                Cv2.Resize(m_ShowImage, dst, size, step, step, InterpolationFlags.Nearest);
+                pictureBox1.Image = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(dst);
             }
         }
         public static Bitmap FileToBitmap(string fileName)
@@ -125,6 +144,38 @@ namespace WindowsFormsApp1
                 m_PressCtrl = false;
             }
             
+        }
+
+        private void 打开图片ToolStripMenuItem_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+
+        private void pictureBox1_MouseHover_1(object sender, EventArgs e)
+        {
+
+        }
+        private void ResizeNew(Mat _src, Mat _dst, double _scale)
+        {
+            int scale = (int)_scale;
+            OpenCvSharp.Size size= new OpenCvSharp.Size(_src.Cols * _scale, _src.Rows * _scale);
+            Mat dst = new Mat(size, MatType.CV_8U);
+            for (int nHeight = 0; nHeight < _src.Rows; nHeight++)
+            {
+                for (int nWidth = 0; nWidth < _src.Cols; nWidth++)
+                {
+                    byte p = _src.At<byte>(nHeight, nWidth);
+
+                    for (int i = 0; i < scale; i++)
+                    {
+                        for (int j = 0; j < scale; j++)
+                        {
+                            _dst.At<byte>(nHeight * scale + i, nWidth * scale + j) = p;
+                        }
+                    }
+                }
+            }
+            _dst = dst.Clone();
         }
     }
 }

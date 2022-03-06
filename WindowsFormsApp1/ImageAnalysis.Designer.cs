@@ -74,9 +74,10 @@
             // 打开图片ToolStripMenuItem
             // 
             this.打开图片ToolStripMenuItem.Name = "打开图片ToolStripMenuItem";
-            this.打开图片ToolStripMenuItem.Size = new System.Drawing.Size(252, 30);
+            this.打开图片ToolStripMenuItem.Size = new System.Drawing.Size(164, 30);
             this.打开图片ToolStripMenuItem.Text = "打开图片";
             this.打开图片ToolStripMenuItem.Click += new System.EventHandler(this.打开图片ToolStripMenuItem_Click);
+            this.打开图片ToolStripMenuItem.MouseHover += new System.EventHandler(this.打开图片ToolStripMenuItem_MouseHover);
             // 
             // 滤波ToolStripMenuItem
             // 
@@ -92,6 +93,9 @@
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.AutoScroll = true;
             this.panel1.Controls.Add(this.pictureBox1);
             this.panel1.Location = new System.Drawing.Point(0, 59);
@@ -101,12 +105,16 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBox1.Location = new System.Drawing.Point(3, 3);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(927, 578);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
+            this.pictureBox1.MouseHover += new System.EventHandler(this.pictureBox1_MouseHover_1);
             // 
             // ImageAnalysis
             // 
