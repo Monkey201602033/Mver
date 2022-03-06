@@ -282,5 +282,9 @@ namespace WindowsFormsApp1
                 
             }
         }
+        public void SetExposureTime(double _time)
+        {
+            m_objIGXFeatureControl.GetFloatFeature("ExposureTime").SetValue(_time);
+        }
     }
 }

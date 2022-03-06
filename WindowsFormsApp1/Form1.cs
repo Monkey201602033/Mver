@@ -19,9 +19,8 @@ namespace WindowsFormsApp1
 {
     delegate void myDelegateShowText(string ss);
     public partial class Form1 : Form
-    {
-        SiemensS7Net plc;                                  // PLC通信
-        CommunicationPLC m_objCommPLC;
+    {                                 
+        CommunicationPLC m_objCommPLC;                     // PLC通信
         DHCameraCtrls m_objDHCameras;
         BaslerCameraCtrl m_objBaslerCamera;
         ImageProcessing m_objImageProcessing;
@@ -47,7 +46,7 @@ namespace WindowsFormsApp1
             m_objBaslerCamera = new BaslerCameraCtrl();
             m_nNumCamera = m_objBaslerCamera.CameraInit();                                    
             m_objBaslerCamera.CameraImageEvent += m_objImageProcessing.CameraProcessBasler;     // basler相机响应事件，所有相机事件触发同一事件函数
-
+            
             // 大恒相机初始化
             m_objDHCameras = new DHCameraCtrls();
             m_objDHCameras.opencamera();
@@ -79,33 +78,33 @@ namespace WindowsFormsApp1
             while (true)
             {
                 string ss = Convert.ToString(i) + "\n";
-                this.Invoke(new Action(() =>
-                { SetString2RichTextBox(ss); }
-                ));
+                //this.Invoke(new Action(() =>
+                //{ SetString2RichTextBox(ss); }
+                //));
                 i++;
-                Thread.Sleep(50); // 每秒读取一次
-                
                 byte byteCaptureImageBasler = m_objCommPLC.ReadByteSiemensS7("DB10.22");
-                /*
+                
                 byte byteCaptureImageDH = m_objCommPLC.ReadByteSiemensS7("DB100.10");
-                if (11 == byteCaptureImageDH && m_bCaptureImageDH)
+                if (11 == byteCaptureImageDH)
                 {
                     // 触发相机拍照
-                     m_objDHCameras.CaptureImage();
-                    //m_objBaslerCamera.OneShot("21163847");
+                    m_objDHCameras.CaptureImage();
                     m_bCaptureImageDH = false;
                 }
-                */
-                if (11 == byteCaptureImageBasler && m_bCaptureImageBasler)
+                
+                if (11 == byteCaptureImageBasler)
                 {
-                    // 触发相机拍照
+                    // 触发相机拍照,使用map和配置文件实现具体哪个信号对应哪个相机
                     m_objBaslerCamera.OneShot("21163847");
                     m_bCaptureImageBasler = false;
                 }
+                Thread.Sleep(50); // 每秒读取一次
             }
         }
         private void 自动运行ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            m_objBaslerCamera.setExposureTime("21163847", 1000);
+            m_objDHCameras.SetExposureTime(1000);
             bool statue = m_objCommPLC.GetConnectionStatue();
             if (statue)
             {
@@ -321,12 +320,22 @@ namespace WindowsFormsApp1
 
         private void 相机ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            
         }
 
         private void menuStrip2_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
+        }
+
+        private void 触发ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_objCommPLC.WriteByteSiemensS7("DB10.22", 11);
+        }
+
+        private void 关闭ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            m_objCommPLC.WriteByteSiemensS7("DB10.22", 10);
         }
 
 

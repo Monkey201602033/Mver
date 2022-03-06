@@ -39,19 +39,23 @@ namespace WindowsFormsApp1
             CameraSendImageEvent(dst, 2);
             m_objCommPLC.WriteByteSiemensS7("DB100.12", 11);
             
-            CaptureStatueEvent(true, "DH");
+            // CaptureStatueEvent(false, "DH");
         }
         public void CameraProcessBasler(Bitmap bmp)
         {
             m_objCommPLC.WriteByteSiemensS7("DB10.11", 11);
             m_objCommPLC.WriteByteSiemensS7("DB10.10", 10);
-            // 图像处理
+            // 图像处理...
             OpenCvSharp.Mat mat = OpenCvSharp.Extensions.BitmapConverter.ToMat(bmp);
-            CameraSendImageEvent(mat, 3);          // 给主程序发送图片
-            CameraSendImageEvent(mat, 4);
-            m_objCommPLC.WriteByteSiemensS7("DB10.12", 11);
 
-            CaptureStatueEvent(true, "Basler");
+            // 给主程序发送显示图片
+            CameraSendImageEvent(mat, 3);          
+            CameraSendImageEvent(mat, 4);
+
+
+            m_objCommPLC.WriteByteSiemensS7("DB10.22", 10);
+
+            // CaptureStatueEvent(true, "Basler");
         }
         public void CameraProcessTwo(object objUserParam, IFrameData objIFrameData)
         {

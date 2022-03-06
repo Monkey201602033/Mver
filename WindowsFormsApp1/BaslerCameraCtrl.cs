@@ -102,8 +102,11 @@ namespace WindowsFormsApp1
         {
             if (m_mapCameras[_modelName] != null)
             {
-                m_mapCameras[_modelName].Parameters[PLCamera.AcquisitionMode].SetValue(PLCamera.AcquisitionMode.SingleFrame);
-                m_mapCameras[_modelName].StreamGrabber.Start(1, GrabStrategy.OneByOne, GrabLoop.ProvidedByStreamGrabber);
+                if (!m_mapCameras[_modelName].StreamGrabber.IsGrabbing)  // 防止当前正在采集，再次触发报错
+                {
+                    m_mapCameras[_modelName].Parameters[PLCamera.AcquisitionMode].SetValue(PLCamera.AcquisitionMode.SingleFrame);
+                    m_mapCameras[_modelName].StreamGrabber.Start(1, GrabStrategy.OneByOne, GrabLoop.ProvidedByStreamGrabber);
+                }
             }
         }
 
@@ -146,6 +149,19 @@ namespace WindowsFormsApp1
                 m_mapCameras[_modelName] = null;
             }
         }
+        public int setExposureTime(string _modelName, long ExposureTimeNum)//设置曝光时间us
+        {
+            try
+            {
+                m_mapCameras[_modelName].Parameters[PLCamera.ExposureTimeAbs].SetValue(ExposureTimeNum);
+            }
+            catch
+            {
+                return -1;
+            }
+            return 0;
+        }
+
     }
 }
 

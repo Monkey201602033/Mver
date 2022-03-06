@@ -116,6 +116,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaslerCameraCtrl.cs" />
+    <Compile Include="BaslerCameraCtrls.cs" />
     <Compile Include="CameraSetting.cs">
       <SubType>Form</SubType>
     </Compile>

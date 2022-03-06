@@ -132,7 +132,6 @@ D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.NinePointCalibration.resources
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.CameraSetting.resources
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.ImageAnalysis.resources
-D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.csprojAssemblyReference.cache
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\x64\OpenNI2.dll
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\x64\PclSharp.Extern.dll
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\x64\pcl_common_release.dll
@@ -152,3 +151,4 @@ D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\PclSharp.dll
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\PclSharp.pdb
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\PclSharp.xml
 D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\bin\x64\Debug\Basler.Pylon.dll
+D:\winformProj\WindowsFormsApp1\WindowsFormsApp1\obj\x64\Debug\WindowsFormsApp1.csprojAssemblyReference.cache

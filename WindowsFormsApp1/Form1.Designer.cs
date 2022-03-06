@@ -74,6 +74,8 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.触发ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.关闭ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip2.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -168,14 +170,17 @@
             // pLCToolStripMenuItem
             // 
             this.pLCToolStripMenuItem.Name = "pLCToolStripMenuItem";
-            this.pLCToolStripMenuItem.Size = new System.Drawing.Size(148, 36);
+            this.pLCToolStripMenuItem.Size = new System.Drawing.Size(252, 36);
             this.pLCToolStripMenuItem.Text = "PLC";
             this.pLCToolStripMenuItem.Click += new System.EventHandler(this.pLCToolStripMenuItem_Click);
             // 
             // 相机ToolStripMenuItem
             // 
+            this.相机ToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.触发ToolStripMenuItem,
+            this.关闭ToolStripMenuItem});
             this.相机ToolStripMenuItem.Name = "相机ToolStripMenuItem";
-            this.相机ToolStripMenuItem.Size = new System.Drawing.Size(148, 36);
+            this.相机ToolStripMenuItem.Size = new System.Drawing.Size(252, 36);
             this.相机ToolStripMenuItem.Text = "相机";
             this.相机ToolStripMenuItem.Click += new System.EventHandler(this.相机ToolStripMenuItem_Click);
             // 
@@ -517,6 +522,20 @@
             this.timer1.Enabled = true;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // 触发ToolStripMenuItem
+            // 
+            this.触发ToolStripMenuItem.Name = "触发ToolStripMenuItem";
+            this.触发ToolStripMenuItem.Size = new System.Drawing.Size(252, 36);
+            this.触发ToolStripMenuItem.Text = "触发";
+            this.触发ToolStripMenuItem.Click += new System.EventHandler(this.触发ToolStripMenuItem_Click);
+            // 
+            // 关闭ToolStripMenuItem
+            // 
+            this.关闭ToolStripMenuItem.Name = "关闭ToolStripMenuItem";
+            this.关闭ToolStripMenuItem.Size = new System.Drawing.Size(252, 36);
+            this.关闭ToolStripMenuItem.Text = "关闭";
+            this.关闭ToolStripMenuItem.Click += new System.EventHandler(this.关闭ToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 20F);
@@ -598,6 +617,8 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel8;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel10;
         private System.Windows.Forms.ToolStripMenuItem 图像分析ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 触发ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 关闭ToolStripMenuItem;
     }
 }
 
